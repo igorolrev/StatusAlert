@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
+		881EA4FA20B5952A00746539 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EA4F920B5952A00746539 /* VisualEffectView.swift */; };
+		881EA4FB20B5952A00746539 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EA4F920B5952A00746539 /* VisualEffectView.swift */; };
 		97A2FAB08B0235866A6B0F31 /* Pods_StatusAlertSwiftDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D10039612BCB7DFE8C1A422 /* Pods_StatusAlertSwiftDemo.framework */; };
 		E90DB65820545E4000F6D74D /* Pods_StatusAlertObjCDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11B2DCF6B626ABDCD0A2BD5 /* Pods_StatusAlertObjCDemo.framework */; };
 		E90DB65B20545E6400F6D74D /* StatusAlert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A189EB1FDC1A7D00F3B75B /* StatusAlert.framework */; };
@@ -75,6 +77,7 @@
 		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7D10039612BCB7DFE8C1A422 /* Pods_StatusAlertSwiftDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StatusAlertSwiftDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86418015C6A00C5A36471684 /* Pods-StatusAlertObjCDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StatusAlertObjCDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StatusAlertObjCDemo/Pods-StatusAlertObjCDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		881EA4F920B5952A00746539 /* VisualEffectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		C11B2DCF6B626ABDCD0A2BD5 /* Pods_StatusAlertObjCDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StatusAlertObjCDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22DBC2D161C23A75FD86CD2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		E90DB65520545D6C00F6D74D /* StatusAlert.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StatusAlert.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				E92B11BC1FF92409009FEA6C /* Extensions */,
+				881EA4F920B5952A00746539 /* VisualEffectView.swift */,
 				E9A189F81FDC1ABD00F3B75B /* StatusAlert.swift */,
 				E9A189F91FDC1ABD00F3B75B /* StatusAlertUtils.swift */,
 			);
@@ -496,6 +500,7 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				881EA4FA20B5952A00746539 /* VisualEffectView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +518,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				881EA4FB20B5952A00746539 /* VisualEffectView.swift in Sources */,
 				E92B11BF1FF92412009FEA6C /* UIDevice+Blur.swift in Sources */,
 				E92B11C01FF92412009FEA6C /* UIDevice+Platform.swift in Sources */,
 				E9A189FA1FDC1ABD00F3B75B /* StatusAlert.swift in Sources */,

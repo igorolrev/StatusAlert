@@ -13,43 +13,30 @@ import UIKit
     /// - Note: Changes while showing will have no effect
     @objc public var appearance: Appearance = Appearance.copyCommon()
     
-    /// - Note: Do not change to save system look
-    /// - Note: Changes while showing will have no effect
-    @objc public var sizesAndDistances: SizesAndDistances = SizesAndDistances.copyCommon()
-    
     /// Announced to VoiceOver when the alert gets presented
     @objc public var accessibilityAnnouncement: String? = nil
     
-    /// How long StatusAlert should on screen.
-    ///
-    /// - Note: This time should include fade animation duration (which `UINavigationControllerHideShowBarDuration`)
-    /// - Note: Changes while showing will have no effect
-    @objc public var alertShowingDuration: TimeInterval = 2
-    
-    /// If multiple alerts can be on screen at once
-    @objc public static var shouldShowMultipleAlertsSimultaneously: Bool = false
-    
     // MARK: - Private fields -
     
-    /// Used to present only one `StatusAlert` at once if `shouldShowMultipleAlertsSimultaneously` is `false`
+    /// Used to present only one `StatusAlert` at once
     private static var isPresenting: Bool = false
     
+    private let defaultDisappearTimerTimeInterval: TimeInterval = 2
     private let defaultFadeAnimationDuration: TimeInterval = TimeInterval(UINavigationControllerHideShowBarDuration)
-    private let blurEffect: UIBlurEffect = UIBlurEffect(style: .light)
     
-    /// @1x should be 90*90 by default
+    
+    /// @1x should be 90*90
     private var image: UIImage?
     private var title: String?
     private var message: String?
     
-    private var contentView: UIVisualEffectView!
+    private var contentView: VisualEffectView!
     
     private var timer: Timer?
     
     /// Determines whether `StatusAlert` can be showed
     private var canBeShowed: Bool {
-        if !StatusAlert.shouldShowMultipleAlertsSimultaneously
-            && StatusAlert.isPresenting {
+        if StatusAlert.isPresenting {
             return false
         }
         if image == nil,
@@ -94,7 +81,7 @@ import UIKit
     /// Instantiates `StatusAlert`
     ///
     /// - Parameters:
-    ///   - image: @1x should be 90*90 by default, optional
+    ///   - image: @1x should be 90*90, optional
     ///   - title: displayed beyond image
     ///   - message: displayed beyond title or
     ///   - canBePickedOrDismissed: determines wether StatusAlert can be picked or dismissed by tap
@@ -259,11 +246,9 @@ import UIKit
             let customSpace: CGFloat
             
             if title != nil && message != nil {
-                customSpace = sizesAndDistances.defaultImageBottomSpace
-            } else if title == nil {
-                customSpace = sizesAndDistances.defaultImageToMessageSpace
+                customSpace = SizesAndDistances.defaultImageBottomSpace
             } else {
-                customSpace = sizesAndDistances.defaultTitleBottomSpace
+                customSpace = SizesAndDistances.defaultTitleBottomSpace
             }
             
             stackView.addArrangedSubview(imageView)
@@ -278,9 +263,9 @@ import UIKit
         if let titleLabel = createTitleLabelIfPossible() {
             stackView.addArrangedSubview(titleLabel)
             if #available(iOS 11.0, *) {
-                stackView.setCustomSpacing(sizesAndDistances.defaultTitleBottomSpace, after: titleLabel)
+                stackView.setCustomSpacing(SizesAndDistances.defaultTitleBottomSpace, after: titleLabel)
             } else if message != nil {
-                let spaceView = createSpaceView(withHeight: sizesAndDistances.defaultTitleBottomSpace)
+                let spaceView = createSpaceView(withHeight: SizesAndDistances.defaultTitleBottomSpace)
                 stackView.addArrangedSubview(spaceView)
             }
         }
@@ -306,22 +291,22 @@ import UIKit
             centerYAnchor.constraint(equalTo: presenter.centerYAnchor, constant: offset ?? 0).isActive = true
         case .top:
             if #available(iOS 11, *) {
-                topAnchor.constraint(equalTo: presenter.safeAreaLayoutGuide.topAnchor, constant: offset ?? sizesAndDistances.defaultTopOffset).isActive = true
+                topAnchor.constraint(equalTo: presenter.safeAreaLayoutGuide.topAnchor, constant: offset ?? SizesAndDistances.defaultTopOffset).isActive = true
             } else {
-                topAnchor.constraint(equalTo: presenter.topAnchor, constant: offset ?? sizesAndDistances.defaultTopOffset).isActive = true
+                topAnchor.constraint(equalTo: presenter.topAnchor, constant: offset ?? SizesAndDistances.defaultTopOffset).isActive = true
             }
         case .bottom:
             if #available(iOS 11, *) {
-                bottomAnchor.constraint(equalTo: presenter.safeAreaLayoutGuide.bottomAnchor, constant: offset ?? -sizesAndDistances.defaultBottomOffset).isActive = true
+                bottomAnchor.constraint(equalTo: presenter.safeAreaLayoutGuide.bottomAnchor, constant: offset ?? -SizesAndDistances.defaultBottomOffset).isActive = true
             } else {
-                bottomAnchor.constraint(equalTo: presenter.bottomAnchor, constant: offset ?? -sizesAndDistances.defaultBottomOffset).isActive = true
+                bottomAnchor.constraint(equalTo: presenter.bottomAnchor, constant: offset ?? -SizesAndDistances.defaultBottomOffset).isActive = true
             }
         }
     }
     
     private func createStackView() -> UIStackView {
         translatesAutoresizingMaskIntoConstraints = false
-        contentView = UIVisualEffectView()
+        contentView = VisualEffectView()
         setupContentView()
         addSubview(contentView)
         
@@ -348,22 +333,22 @@ import UIKit
         contentView.contentView.addSubview(stackView)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: sizesAndDistances.stackViewSideSpace).isActive = true
-        stackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -sizesAndDistances.stackViewSideSpace).isActive = true
-        stackView.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: -sizesAndDistances.minimumStackViewBottomSpace).isActive = true
+        stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: SizesAndDistances.stackViewSideSpace).isActive = true
+        stackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -SizesAndDistances.stackViewSideSpace).isActive = true
+        stackView.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: -SizesAndDistances.minimumStackViewBottomSpace).isActive = true
         stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         
         if image != nil
             && (title != nil || message != nil) {
-            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: sizesAndDistances.minimumAlertHeight).isActive = true
-            contentView.widthAnchor.constraint(equalToConstant: sizesAndDistances.defaultAlertWidth).isActive = true
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: sizesAndDistances.minimumStackViewTopSpace).isActive = true
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: (sizesAndDistances.minimumStackViewTopSpace - sizesAndDistances.minimumStackViewBottomSpace) / 2).isActive = true
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: SizesAndDistances.minimumAlertHeight).isActive = true
+            contentView.widthAnchor.constraint(equalToConstant: SizesAndDistances.defaultAlertWidth).isActive = true
+            stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: SizesAndDistances.minimumStackViewTopSpace).isActive = true
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: (SizesAndDistances.minimumStackViewTopSpace - SizesAndDistances.minimumStackViewBottomSpace) / 2).isActive = true
         } else {
             if image == nil {
-                contentView.widthAnchor.constraint(equalToConstant: sizesAndDistances.defaultAlertWidth).isActive = true
+                contentView.widthAnchor.constraint(equalToConstant: SizesAndDistances.defaultAlertWidth).isActive = true
             }
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: sizesAndDistances.minimumStackViewBottomSpace).isActive = true
+            stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: SizesAndDistances.minimumStackViewBottomSpace).isActive = true
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         }
         return stackView
@@ -372,9 +357,15 @@ import UIKit
     @objc private func setupContentViewBackground() {
         if isBlurAvailable {
             if #available(iOS 11, *) {
-                contentView.effect = blurEffect
+                contentView.effect = appearance.blurEffect
+                contentView.blurRadius = appearance.blurRadius
+                contentView.colorTint = appearance.colorTint
+                contentView.colorTintAlpha = appearance.colorTintAlpha
             } else if StatusAlert.isPresenting {
-                contentView.effect = blurEffect
+                contentView.effect = appearance.blurEffect
+                contentView.blurRadius = appearance.blurRadius
+                contentView.colorTint = appearance.colorTint
+                contentView.colorTintAlpha = appearance.colorTintAlpha
             }
         } else {
             contentView.backgroundColor = appearance.backgroundColor
@@ -395,7 +386,7 @@ import UIKit
         }
         
         contentView.clipsToBounds = true
-        contentView.layer.cornerRadius = sizesAndDistances.defaultCornerRadius
+        contentView.layer.cornerRadius = SizesAndDistances.defaultCornerRadius
     }
     
     private func createSpaceView(withHeight height: CGFloat) -> UIView {
@@ -420,7 +411,7 @@ import UIKit
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: sizesAndDistances.defaultImageWidth).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: SizesAndDistances.defaultImageWidth).isActive = true
         
         return imageView
     }
@@ -479,12 +470,12 @@ import UIKit
     private func present() {
         assertIsMainThread()
         
-        if canBeShowed {
+        if !StatusAlert.isPresenting {
             StatusAlert.isPresenting = true
             
-            let scale: CGFloat = sizesAndDistances.defaultInitialScale
+            let scale: CGFloat = SizesAndDistances.defaultInitialScale
             timer = Timer.scheduledTimer(
-                timeInterval: alertShowingDuration - defaultFadeAnimationDuration,
+                timeInterval: defaultDisappearTimerTimeInterval - defaultFadeAnimationDuration,
                 target: self,
                 selector: #selector(dismiss),
                 userInfo: nil,
@@ -506,7 +497,7 @@ import UIKit
                             self.alpha = 1
                         } else {
                             self.contentView.contentView.alpha = 1
-                            self.contentView.effect = self.blurEffect
+                            self.contentView.effect = self.appearance.blurEffect
                         }
                     } else {
                         self.alpha = 1
@@ -520,7 +511,7 @@ import UIKit
     }
     
     @objc private func dismiss() {
-        let scale: CGFloat = sizesAndDistances.defaultInitialScale
+        let scale: CGFloat = SizesAndDistances.defaultInitialScale
         timer?.invalidate()
         
         if pickGesture?.state != .changed
@@ -560,6 +551,6 @@ import UIKit
 // Compatibility
 
 #if swift(>=4.0)
-    private let NSKernAttributeName = NSAttributedStringKey.kern
-    private let NSParagraphStyleAttributeName = NSAttributedStringKey.paragraphStyle
+private let NSKernAttributeName = NSAttributedStringKey.kern
+private let NSParagraphStyleAttributeName = NSAttributedStringKey.paragraphStyle
 #endif
